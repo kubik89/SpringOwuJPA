@@ -2,9 +2,13 @@ package com.vb.less.demo.controller;
 
 import com.vb.less.demo.dao.MovieRepository;
 import com.vb.less.demo.entity.Movie;
+import com.vb.less.demo.service.IMovieService;
+import com.vb.less.demo.validation.MovieValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +19,7 @@ import java.util.Optional;
 public class MovieController {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private IMovieService iMovieService;
 
 
 //    анотація автоматично створить обєкт для методу
@@ -24,33 +28,43 @@ public class MovieController {
     //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping()
     public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+        return iMovieService.getAllMovies();
     }
 
-    // записуємо дані в ліст
+// тут @RequestParam як приклад, але правильно писати через @PathVariable
+    @GetMapping("/movie")
+    public Movie getMovie(@RequestParam int id) {
+        return iMovieService.getMovieById(id);
+    }
+
     // @RequestBody - оскільки ми json це як стрінга, то цією анотацією ми перетворюємо стрічку в
     // обєкт який в параметрах біля анотації
     // якщо поля які ми передамо не будуть знайдені - їх значення будуть перезаписані як null
+    // Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
     @PostMapping()
-    public Movie createMovie(@RequestBody Movie movie) {
-        return movieRepository.saveAndFlush(movie);
+    public Movie createMovie(@RequestBody @Valid Movie movie) {
+        return iMovieService.saveMovie(movie);
     }
 
 // якщо в Movie не знайдено по вхідному id що в посиланні, тоді помилка, і по-іншому - зберегти в базу
 // @RequestBody Movie movie - це вхідний новий обєкт який ми буде вставлений (перезаписаний) для даної id в базі
 // Тобто, якщо така id існує, то записати в неї цей обєкт movie
     @PutMapping(value = "/{id}")
-    public Movie updateMovie(@PathVariable int id, @RequestBody Movie movie) {
-        if (movieRepository.findById(id).isPresent()) {
-            movie.setId(id);
-            return movieRepository.saveAndFlush(movie);
-        } else {
-            throw new IllegalArgumentException("No movie with such id found" + id);
-        }
+    public Movie updateMovie(@PathVariable int id, @RequestBody @Valid Movie movie) {
+       return iMovieService.updateMovie(id, movie);
     }
 
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable int id) {
-        movieRepository.deleteById(id);
+        iMovieService.deleteMovie(id);
+    }
+
+// анотація, яка вказує, що якщо якийсь метод цього класу має анотацію @Valid, то виконувати саме її перевірки,
+// які описані в класі вказаному в InitBinder-і
+// але ці ручні валідатори спрацьовують швидше від готових (від тих що в класах на полях), тому треба
+// описувати ті ж самі перевірки що на полях для цього валідатора, бо відпрацює швидше за все першим він.
+    @InitBinder
+    public void myInitBinder (WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new MovieValidator());
     }
 }
