@@ -4,6 +4,9 @@ import com.vb.less.demo.dao.MovieRepository;
 import com.vb.less.demo.entity.Movie;
 import com.vb.less.demo.service.IMovieService;
 import com.vb.less.demo.validation.MovieValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +19,14 @@ import java.util.Optional;
 // @RequestMapping можна вказувати якщо value всіх методів рівні цьому посиланні = "/movies"
 @RequestMapping(value = "/movies")
 @RestController
+@Slf4j
 public class MovieController {
 
     @Autowired
     private IMovieService iMovieService;
+
+//це поле для Логів, яка застосується для MovieController (бо в ньому всі методи для Movie)
+    private static Logger logger = LoggerFactory.getLogger(MovieController.class);
 
 
 //    анотація автоматично створить обєкт для методу
@@ -43,6 +50,8 @@ public class MovieController {
     // Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
     @PostMapping()
     public Movie createMovie(@RequestBody @Valid Movie movie) {
+//        logger.info("Logger: this movie was created: {}", movie.getTitle());
+        log.info("Logger: this movie was created: {}", movie.getTitle());
         return iMovieService.saveMovie(movie);
     }
 

@@ -1,6 +1,7 @@
 package com.vb.less.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vb.less.demo.validation.UniqueMovieTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Movie {
 
     @Column(name = "title1")
     @NotBlank
+//    @UniqueMovieTitle()
     private String title;
 
     @Positive(message = "value must be positive")

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+// це власна анотація, працює лише з даними, що не приходять із зовні (не з БД), дуже рідко використовується
 // в <UniqueMovieTitle> вказуємо з якою анотацією буде співпрацювати
 // в String - це тип поля який буду перевіряти (бо перевіряю поле title)
 public class UniqueMovieTitleValidator implements ConstraintValidator<UniqueMovieTitle, String> {
