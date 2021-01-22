@@ -1,5 +1,6 @@
 package com.vb.less.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vb.less.demo.validation.UniqueMovieTitle;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,11 @@ public class Movie {
     @Positive(message = "value must be positive")
     @Max(value = 210, message = "Too long duration")
     private int dutation;
+
+// налаштує звязок між таблицею Director і в Movie таблиці створить поле яке є ключем в Director (director_id)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Director director;
 
 
 }
