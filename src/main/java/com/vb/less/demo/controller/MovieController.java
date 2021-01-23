@@ -1,6 +1,8 @@
 package com.vb.less.demo.controller;
 
 import com.vb.less.demo.dao.MovieRepository;
+import com.vb.less.demo.dto.MovieCreateDto;
+import com.vb.less.demo.dto.MovieDto;
 import com.vb.less.demo.entity.Movie;
 import com.vb.less.demo.service.IMovieService;
 import com.vb.less.demo.validation.MovieValidator;
@@ -17,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 // @RequestMapping можна вказувати якщо value всіх методів рівні цьому посиланні = "/movies"
-@RequestMapping(value = "/movies")
 @RestController
+@RequestMapping(value = "/movies")
 @Slf4j
 public class MovieController {
 
@@ -34,13 +36,13 @@ public class MovieController {
 
     //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping()
-    public List<Movie> getAllMovies() {
+    public List<MovieDto> getAllMovies() {
         return iMovieService.getAllMovies();
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable
     @GetMapping("/movie")
-    public Movie getMovie(@RequestParam int id) {
+    public MovieDto getMovie(@RequestParam int id) {
         return iMovieService.getMovieById(id);
     }
 
@@ -49,7 +51,8 @@ public class MovieController {
     // якщо поля які ми передамо не будуть знайдені - їх значення будуть перезаписані як null
     // Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
     @PostMapping()
-    public Movie createMovie(@RequestBody @Valid Movie movie) {
+    public MovieDto createMovie(@RequestBody @Valid MovieCreateDto movie) {
+//    public Movie createMovie(@RequestBody @Valid Movie movie) {
 //        logger.info("Logger: this movie was created: {}", movie.getTitle());
         log.info("Logger: this movie was created: {}", movie.getTitle());
         return iMovieService.saveMovie(movie);
@@ -72,8 +75,8 @@ public class MovieController {
 // які описані в класі вказаному в InitBinder-і
 // але ці ручні валідатори спрацьовують швидше від готових (від тих що в класах на полях), тому треба
 // описувати ті ж самі перевірки що на полях для цього валідатора, бо відпрацює швидше за все першим він.
-    @InitBinder
-    public void myInitBinder (WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new MovieValidator());
-    }
+//    @InitBinder
+//    public void myInitBinder (WebDataBinder webDataBinder) {
+//        webDataBinder.addValidators(new MovieValidator());
+//    }
 }

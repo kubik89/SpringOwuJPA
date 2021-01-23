@@ -1,5 +1,6 @@
 package com.vb.less.demo.controller;
 
+import com.vb.less.demo.dto.BadRequestException;
 import com.vb.less.demo.dto.ResponceErrorDTO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,5 +35,10 @@ public class ErrorController {
     private String parceValidationException(MethodArgumentNotValidException ex) {
         List<String> collect = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         return collect.toString();
+    }
+
+    @ExceptionHandler(value = BadRequestException.class)
+    public ResponceErrorDTO handleBadRequestException(BadRequestException ex) {
+        return new ResponceErrorDTO(LocalDateTime.now(), ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 }

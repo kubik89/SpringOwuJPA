@@ -1,16 +1,18 @@
 package com.vb.less.demo.service;
 
+import com.vb.less.demo.dto.MovieCreateDto;
+import com.vb.less.demo.dto.MovieDto;
 import com.vb.less.demo.entity.Movie;
 
 import java.util.List;
 
 public interface IMovieService {
 
-    Movie saveMovie(Movie movie);
+    MovieDto saveMovie(MovieCreateDto movie);
 
-    List<Movie> getAllMovies();
+    List<MovieDto> getAllMovies();
 
-    Movie getMovieById(int id);
+    MovieDto getMovieById(int id);
 
     void deleteMovie(int id);
 

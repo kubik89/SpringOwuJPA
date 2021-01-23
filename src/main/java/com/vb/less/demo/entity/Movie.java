@@ -34,7 +34,7 @@ public class Movie {
 
     @Positive(message = "value must be positive")
     @Max(value = 210, message = "Too long duration")
-    private int dutation;
+    private int duration;
 
 // налаштує звязок між таблицею Director і в Movie таблиці створить поле яке є ключем в Director (director_id)
     @ManyToOne(fetch = FetchType.LAZY)
