@@ -38,8 +38,16 @@ public class Movie {
 
 // налаштує звязок між таблицею Director і в Movie таблиці створить поле яке є ключем в Director (director_id)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+//    @JsonIgnore
     private Director director;
 
-
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", duration=" + duration +
+                ", director=" + director +
+                '}';
+    }
 }

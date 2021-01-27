@@ -5,22 +5,27 @@ import com.vb.less.demo.dao.MovieRepository;
 import com.vb.less.demo.dto.BadRequestException;
 import com.vb.less.demo.dto.MovieCreateDto;
 import com.vb.less.demo.dto.MovieDto;
+import com.vb.less.demo.dto.MoviePageDto;
 import com.vb.less.demo.entity.Director;
 import com.vb.less.demo.entity.Movie;
 import org.apache.commons.lang3.CharUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MovieService implements IMovieService {
 
-    private MovieRepository movieRepository;
-    private DirectoryRepository directoryRepository;
+    private final MovieRepository movieRepository;
+    private final DirectoryRepository directoryRepository;
 
     @Autowired
     public MovieService(MovieRepository movieRepository, DirectoryRepository directoryRepository) {
@@ -51,12 +56,14 @@ public class MovieService implements IMovieService {
         movieEntity.setDirector(newDirector);
         return convertToMovieDto(movieRepository.saveAndFlush(movieEntity));
     }
-
+// повертаю обєкт класу MoviePageDto, де отримаю ліст Movie та кількість сторінок на який його розраховано
     @Override
-    public List<MovieDto> getAllMovies() {
-        return movieRepository.findAll().stream().map(movie ->
+    public MoviePageDto getAllMovies(PageRequest pageRequest) {
+        Page<Movie> moviePages = movieRepository.findAll(pageRequest);
+        List<MovieDto> movies = moviePages.stream().map(movie ->
                 new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), movie.getDirector().getName()))
                 .collect(Collectors.toList());
+        return new MoviePageDto(movies, moviePages.getTotalPages());
     }
 
     @Override

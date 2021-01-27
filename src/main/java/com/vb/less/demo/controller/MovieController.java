@@ -1,22 +1,19 @@
 package com.vb.less.demo.controller;
 
-import com.vb.less.demo.dao.MovieRepository;
 import com.vb.less.demo.dto.MovieCreateDto;
 import com.vb.less.demo.dto.MovieDto;
+import com.vb.less.demo.dto.MoviePageDto;
 import com.vb.less.demo.entity.Movie;
 import com.vb.less.demo.service.IMovieService;
-import com.vb.less.demo.validation.MovieValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 // @RequestMapping можна вказувати якщо value всіх методів рівні цьому посиланні = "/movies"
 @RestController
@@ -35,9 +32,16 @@ public class MovieController {
 //@RequestMapping - старіша аніж @GetMapping, бо потребує вказати метод в параметрах
 
     //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
-    @GetMapping()
-    public List<MovieDto> getAllMovies() {
-        return iMovieService.getAllMovies();
+//    @GetMapping
+//    public List<MovieDto> getAllMovies(@RequestParam(required = false) int page,
+//                                       @RequestParam(defaultValue = "4") int size) {
+//        return iMovieService.getAllMovies(PageRequest.of(page, size));
+//    }
+
+    @GetMapping
+    public MoviePageDto getAllMovies(@RequestParam(required = false) int page,
+                                           @RequestParam(defaultValue = "4") int size) {
+        return iMovieService.getAllMovies(PageRequest.of(page, size));
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable
