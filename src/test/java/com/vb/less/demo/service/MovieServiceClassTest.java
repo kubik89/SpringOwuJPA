@@ -12,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceClassTest {
 
@@ -38,6 +42,7 @@ public class MovieServiceClassTest {
         movie2.setTitle("Title2");
 
         Director director = new Director();
+        director.setMovies(Arrays.asList(movie1, movie2));
         director.setId(1);
         director.setName("Taras");
         Mockito.when(directoryRepository.findMoviesByDirectorName(ArgumentMatchers.anyString()))
