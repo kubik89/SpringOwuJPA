@@ -2,10 +2,7 @@ package com.vb.less.demo.service;
 
 import com.vb.less.demo.dao.DirectoryRepository;
 import com.vb.less.demo.dao.MovieRepository;
-import com.vb.less.demo.dto.BadRequestException;
-import com.vb.less.demo.dto.MovieCreateDto;
-import com.vb.less.demo.dto.MovieDto;
-import com.vb.less.demo.dto.MoviePageDto;
+import com.vb.less.demo.dto.*;
 import com.vb.less.demo.entity.Director;
 import com.vb.less.demo.entity.Movie;
 import org.apache.commons.lang3.CharUtils;
@@ -84,6 +81,17 @@ public class MovieService implements IMovieService {
         } else {
             throw new IllegalArgumentException("No movie with such id found: " + id);
         }
+    }
+
+    @Override
+    public MovieDirectorDto getMoviesByDirectorName(String name) {
+        Director director = directoryRepository.findMoviesByDirectorName(name);
+        String directorName = director.getName();
+        int directorId = director.getId();
+        List<Movie> movies = director.getMovies();
+        List<MovieDto> movieDtos = movies.stream().map(movie ->
+                new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), directorName)).collect(Collectors.toList());
+        return new MovieDirectorDto(directorId, movieDtos);
     }
 
     private MovieDto convertToMovieDto(Movie movie) {

@@ -1,6 +1,7 @@
 package com.vb.less.demo.controller;
 
 import com.vb.less.demo.dto.MovieCreateDto;
+import com.vb.less.demo.dto.MovieDirectorDto;
 import com.vb.less.demo.dto.MovieDto;
 import com.vb.less.demo.dto.MoviePageDto;
 import com.vb.less.demo.entity.Movie;
@@ -45,9 +46,14 @@ public class MovieController {
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable
-    @GetMapping("/movie")
+    @GetMapping("/movie/{id}")
     public MovieDto getMovie(@RequestParam int id) {
         return iMovieService.getMovieById(id);
+    }
+
+    @GetMapping("/director/{name}")
+    public MovieDirectorDto getMoviesByDirectorName(@PathVariable String name) {
+        return iMovieService.getMoviesByDirectorName(name);
     }
 
     // @RequestBody - оскільки ми json це як стрінга, то цією анотацією ми перетворюємо стрічку в

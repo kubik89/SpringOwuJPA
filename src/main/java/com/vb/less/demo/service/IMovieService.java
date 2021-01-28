@@ -1,6 +1,7 @@
 package com.vb.less.demo.service;
 
 import com.vb.less.demo.dto.MovieCreateDto;
+import com.vb.less.demo.dto.MovieDirectorDto;
 import com.vb.less.demo.dto.MovieDto;
 import com.vb.less.demo.dto.MoviePageDto;
 import com.vb.less.demo.entity.Movie;
@@ -23,4 +24,6 @@ public interface IMovieService {
     void deleteMovie(int id);
 
     Movie updateMovie(int id, Movie movie);
+
+    MovieDirectorDto getMoviesByDirectorName(String name);
 }

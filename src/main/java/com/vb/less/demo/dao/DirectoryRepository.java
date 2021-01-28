@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface DirectoryRepository extends JpaRepository<Director, Integer> {
 
+    @Query("select d from Director d join d.movies where d.name like :name")
+    Director findMoviesByDirectorName(String name);
 }
