@@ -1,11 +1,12 @@
 package com.vb.less.demo.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
     @NoArgsConstructor
-    @Getter
+    @Data
     @AllArgsConstructor
 
 // це клас який повертає самі те поля, які нам треба для таблиці бази даних.
