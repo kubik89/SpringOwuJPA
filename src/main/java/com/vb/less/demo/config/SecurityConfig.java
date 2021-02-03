@@ -4,21 +4,29 @@ import com.vb.less.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserService userDetailsService;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
 
     // цей метод конфігурує автентифікацію (створення логіну та паролів)
 // .and() - повертає на крок-клас вище, як в папці, для виходу на головну.
@@ -51,10 +59,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     // .antMatchers("/**").authenticated() - все має бути відгукуватись, АЛЕ якщо користувач авторизований
     // .antMatchers(HttpMethod.POST).hasRole("ADMIN") - методи POST може виконувати ЛИШЕ користувач ролі ADMIN
     // antmatchers мають йти від НАЙБІЛЬШ КОНКРЕТНОГО до БІЛЬШ ЗАГАЛЬНОГО
     // POST /users є більш конкретним, ніж просто /POST, тому має йти найвище
+    // SessionCreationPolicy.STATELESS - сесія буде тривати разово, один ключ на сесію
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable()
@@ -69,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 // якщо писати .formLogin() то по урлі http://localhost:8081/movies?page=2 вискочить форма для введення логіна
 // якщо ми пишемо свою UI, тоді використовуємо .httpBasic()
 //        .formLogin();
-                .httpBasic();
+//                .httpBasic();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
