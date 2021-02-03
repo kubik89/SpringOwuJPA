@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,7 +47,7 @@ public class MovieController {
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable
-    @GetMapping("/movie/{id}")
+    @GetMapping("{id}")
     public MovieDto getMovie(@RequestParam int id) {
         return iMovieService.getMovieById(id);
     }
@@ -61,6 +62,7 @@ public class MovieController {
     // якщо поля які ми передамо не будуть знайдені - їх значення будуть перезаписані як null
     // Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public MovieDto createMovie(@RequestBody @Valid MovieCreateDto movie) {
 //    public Movie createMovie(@RequestBody @Valid Movie movie) {
 //        logger.info("Logger: this movie was created: {}", movie.getTitle());
