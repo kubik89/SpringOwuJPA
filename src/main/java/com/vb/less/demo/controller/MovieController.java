@@ -47,7 +47,7 @@ public class MovieController {
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public MovieDto getMovie(@RequestParam int id) {
         return iMovieService.getMovieById(id);
     }

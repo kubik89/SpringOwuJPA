@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    // реєстрація юзера
+    // тільки реєстрація юзера, але не автентифікація в систему
     @PostMapping
     public String registerUser(@RequestBody User user) {
         return userService.createUser(user);
