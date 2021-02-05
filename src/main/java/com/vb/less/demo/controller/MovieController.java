@@ -40,10 +40,15 @@ public class MovieController {
 //        return iMovieService.getAllMovies(PageRequest.of(page, size));
 //    }
 
+//    @GetMapping
+//    public MoviePageDto getAllMovies(@RequestParam(required = false) int page,
+//                                     @RequestParam(defaultValue = "4") int size) {
+//        return iMovieService.getAllMovies(PageRequest.of(page, size));
+//    }
+
     @GetMapping
-    public MoviePageDto getAllMovies(@RequestParam(required = false) int page,
-                                           @RequestParam(defaultValue = "4") int size) {
-        return iMovieService.getAllMovies(PageRequest.of(page, size));
+    public MoviePageDto getAllMovies() {
+        return iMovieService.getAllMovies();
     }
 
 // тут @RequestParam як приклад, але правильно писати через @PathVariable

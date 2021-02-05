@@ -54,13 +54,22 @@ public class MovieService implements IMovieService {
         return convertToMovieDto(movieRepository.saveAndFlush(movieEntity));
     }
 // повертаю обєкт класу MoviePageDto, де отримаю ліст Movie та кількість сторінок на який його розраховано
+//    @Override
+//    public MoviePageDto getAllMovies(PageRequest pageRequest) {
+//        Page<Movie> moviePages = movieRepository.findAll(pageRequest);
+//        List<MovieDto> movies = moviePages.stream().map(movie ->
+//                new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), movie.getDirector().getName()))
+//                .collect(Collectors.toList());
+//        return new MoviePageDto(movies, moviePages.getTotalPages());
+//    }
+
     @Override
-    public MoviePageDto getAllMovies(PageRequest pageRequest) {
-        Page<Movie> moviePages = movieRepository.findAll(pageRequest);
-        List<MovieDto> movies = moviePages.stream().map(movie ->
+    public MoviePageDto getAllMovies() {
+        List<Movie> movieList = movieRepository.findAll();
+        List<MovieDto> listMovieDto = movieList.stream().map(movie ->
                 new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), movie.getDirector().getName()))
                 .collect(Collectors.toList());
-        return new MoviePageDto(movies, moviePages.getTotalPages());
+        return new MoviePageDto(listMovieDto);
     }
 
     @Override

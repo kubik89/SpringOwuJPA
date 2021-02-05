@@ -17,7 +17,7 @@ public interface IMovieService {
 //    List<MovieDto> getAllMovies();
 
 //    List<MovieDto> getAllMovies(PageRequest pageRequest);
-    MoviePageDto getAllMovies(PageRequest pageRequest);
+    MoviePageDto getAllMovies();
 
     MovieDto getMovieById(int id);
 
