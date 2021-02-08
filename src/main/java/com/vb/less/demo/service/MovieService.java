@@ -7,16 +7,13 @@ import com.vb.less.demo.entity.Director;
 import com.vb.less.demo.entity.Movie;
 import org.apache.commons.lang3.CharUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class MovieService implements IMovieService {
@@ -32,6 +29,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public MovieDto saveMovie(MovieCreateDto movie) {
+//    public MovieDto saveMovie(MovieCreateDto movie, MultipartFile file) {
         char firstLetter = movie.getTitle().charAt(0);
 
         if (!CharUtils.isAsciiAlphaUpper(firstLetter)) {
@@ -51,6 +49,13 @@ public class MovieService implements IMovieService {
         Director newDirector = director.orElseThrow(() ->
                 new BadRequestException("no director with such id found"));
         movieEntity.setDirector(newDirector);
+
+//        try {
+//            movieEntity.setPoster(file.getBytes());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         return convertToMovieDto(movieRepository.saveAndFlush(movieEntity));
     }
 // повертаю обєкт класу MoviePageDto, де отримаю ліст Movie та кількість сторінок на який його розраховано
@@ -75,6 +80,11 @@ public class MovieService implements IMovieService {
     @Override
     public MovieDto getMovieById(int id) {
         return convertToMovieDto(movieRepository.getOne(id));
+    }
+// Отримую дані картинки по id Movie
+    @Override
+    public byte[] getMoviePoster(int id) {
+        return movieRepository.getOne(id).getPoster();
     }
 
     @Override

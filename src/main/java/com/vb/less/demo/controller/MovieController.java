@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,21 +59,33 @@ public class MovieController {
         return iMovieService.getMovieById(id);
     }
 
+// produces - ніби дати/виготовити на огляд такий тип даних, їх є багато.
+// якщо зі всіх байтів які отримаю і складуться до купи буде картинка - то відобразиться
+    @GetMapping(value = "/poster/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getPosterOfMovie(@PathVariable int id) {
+        return iMovieService.getMoviePoster(id);
+    }
+
     @GetMapping("/director/{name}")
     public MovieDirectorDto getMoviesByDirectorName(@PathVariable String name) {
         return iMovieService.getMoviesByDirectorName(name);
     }
 
-    // @RequestBody - оскільки ми json це як стрінга, то цією анотацією ми перетворюємо стрічку в
-    // обєкт який в параметрах біля анотації
-    // якщо поля які ми передамо не будуть знайдені - їх значення будуть перезаписані як null
-    // Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
-    @PostMapping()
+// @RequestBody - оскільки ми json це як стрінга, то цією анотацією ми перетворюємо стрічку в
+// обєкт який в параметрах біля анотації
+// якщо поля які ми передамо не будуть знайдені - їх значення будуть перезаписані як null
+// Valid тут перевірить, чи поля класу валідні (якщо там стоять анотації валідації для поля класу)
+// MediaType.MULTIPART_FORM_DATA_VALUE - якщо передаємо файли
+// MultipartFile file - тип файлу даних (файл) та назва проперті яку передаємо (обовязково така сама як пропертя)
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+//    public MovieDto createMovie(@Valid MovieCreateDto movie, MultipartFile file) {
     public MovieDto createMovie(@RequestBody @Valid MovieCreateDto movie) {
 //    public Movie createMovie(@RequestBody @Valid Movie movie) {
 //        logger.info("Logger: this movie was created: {}", movie.getTitle());
         log.info("Logger: this movie was created: {}", movie.getTitle());
+//        return iMovieService.saveMovie(movie, file);
         return iMovieService.saveMovie(movie);
     }
 

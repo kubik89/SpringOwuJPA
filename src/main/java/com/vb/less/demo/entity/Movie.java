@@ -36,6 +36,10 @@ public class Movie {
     @Max(value = 210, message = "Too long duration")
     private int duration;
 
+// для файлу якщо передаємо
+    @Lob
+    private byte[] poster;
+
 // налаштує звязок між таблицею Director і в Movie таблиці створить поле яке є ключем в Director (director_id)
     @ManyToOne(fetch = FetchType.LAZY)
 //    @JsonIgnore
